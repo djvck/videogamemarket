@@ -1,0 +1,79 @@
+select * 
+from dbo.videogames
+
+-- Alle Nintendo Games -- 
+select *
+from dbo.videogames
+where Publisher = 'Nintendo' 
+
+
+ /* Alle Pokemongames in den 90er Jahren*/
+select * 
+from dbo.videogames
+where Publisher = 'Nintendo' AND Year_of_Release < 2000  AND Year_of_Release >= 1990 AND Name LIKE '%pokemon%'
+ORDER BY Year_of_Release ASC
+
+
+/* Das meistverkaufte Pokemonspiel der 90er in Japan */ 
+
+SELECT Name, JP_Sales as 'Japan Sales' 
+from dbo.videogames
+WHERE JP_Sales = (Select MAX(JP_SALES) as bestseller
+from dbo.videogames
+where Publisher = 'Nintendo' AND Year_of_Release < 2000  AND Year_of_Release >= 1990 AND Name LIKE '%pokemon%')
+
+/* Das meistverkaufte Pokemonspiel der 90er in Europa */ 
+
+SELECT Name, EU_Sales as 'Europe Sales' 
+from dbo.videogames
+WHERE EU_Sales = (Select MAX(EU_Sales ) as bestseller
+from dbo.videogames
+where Publisher = 'Nintendo' AND Year_of_Release < 2000  AND Year_of_Release >= 1990 AND Name LIKE '%pokemon%')
+
+
+/* Wo wurde Pokemon ausserhalb von Japan am meisten verkauft */ 
+
+SELECT Name, Platform,
+CASE
+	WHEN EU_Sales > NA_Sales AND EU_Sales > Other_Sales THEN 'Europa'
+	WHEN NA_Sales > EU_Sales AND NA_Sales > Other_Sales THEN 'North America'
+	ELSE 'Other'
+END AS 'Most Sold'
+from dbo.videogames
+where Publisher = 'Nintendo' AND Year_of_Release < 2000  AND Year_of_Release >= 1990 AND Name LIKE '%pokemon%'
+
+
+/* Alle PS Games */ 
+select *
+from dbo.videogames
+where Platform LIKE '%ps%'
+ORDER BY Global_Sales DESC
+
+/* meist verkaufteste PS Spiel allerzeiten */ 
+
+select Name, Platform, Year_of_Release, Genre, Publisher, Global_Sales
+from dbo.videogames
+WHERE Global_Sales = (
+	SELECT MAX(Global_Sales)
+	from dbo.videogames
+	WHERE Platform LIKE '%ps%'
+	)
+
+
+/* Verkaufsflopps von PS SPielen*/
+
+select Name, Platform, Year_of_Release, Genre, Publisher, Global_Sales
+from dbo.videogames
+WHERE Platform LIKE '%ps%' AND  Global_Sales = (
+	SELECT MIN(Global_Sales)
+	from dbo.videogames
+	)
+
+	------------------------------------------------------------------------------------------
+
+/* Anzahl der Spiele pro Genre */ 
+select Genre, COUNT(Genre) as 'count'
+from dbo.videogames
+WHERE Genre IS NOT NULL
+Group by Genre
+ORDER BY count DESC 
