@@ -113,17 +113,29 @@ ORDER BY 'Average Global Sales' DESC
 ------------------------------------------------------------------------------------
 /* Durschnittliche Global Sales je nach Genre
 
-Erkenntnis: In den 90er Jahren was Puzzle Gerne weitaus beliebert das jetzt. 
+Erkenntnis: In den 90er Jahren war das Roleplaying Gerne weitaus beliebert als jetzt. 
 
 */ 
 SELECT Genre, COUNT(Name) as 'Games', ROUND(AVG(Global_Sales),2) as 'Average Global Sales'
 from dbo.videogames
-WHERE Genre IS NOT NULL AND Year_of_Release < 2000
+WHERE Genre IS NOT NULL AND Year_of_Release < 2000 AND Year_of_Release >= 1990
 GROUP BY Genre 
 ORDER BY 'Average Global Sales' DESC
 
+-- Nintendos Verkaufszahlen über die Jahre
+-- Erkenntnis: Die Verkaufsstärkste Zeit für Nintend war in den 80er Jahren obwohl sie da die wenigsten Spiele rausgebracht haben. 
 
-
-SELECT *
+SELECT Publisher, COUNT(Name) as 'Released Games', AVG(Global_Sales) As 'Global Revenue 90s'
 from dbo.videogames
-WHERE Publisher ='Nintendo'
+WHERE Publisher ='Nintendo' AND Year_of_Release < 2000 AND Year_of_Release >= 1990
+GROUP BY Publisher
+
+SELECT Publisher, COUNT(Name) as 'Released Games', AVG(Global_Sales) As 'Global Revenue 80s'
+from dbo.videogames
+WHERE Publisher ='Nintendo' AND Year_of_Release < 1990 AND Year_of_Release >= 1980
+GROUP BY Publisher
+
+SELECT Publisher, COUNT(Name) as 'Released Games', AVG(Global_Sales) As 'Global Revenue 2000s'
+from dbo.videogames
+WHERE Publisher ='Nintendo' AND Year_of_Release >= 2000
+GROUP BY Publisher
