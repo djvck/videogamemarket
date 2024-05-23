@@ -77,3 +77,36 @@ from dbo.videogames
 WHERE Genre IS NOT NULL
 Group by Genre
 ORDER BY count DESC 
+
+/* Welche Platform hat die meisten Actionspiele */ 
+SELECT Platform, COUNT(Platform) as 'Anzahl der Actiongames' 
+FROM dbo.videogames
+WHERE Genre = 'Action'
+GROUP BY Platform
+ORDER BY 'Anzahl der Actiongames' DESC 
+
+-- Durschnittle Global Sales im Gerne Action für Playstations
+
+SELECT Platform, ROUND(AVG(Global_Sales),2) as 'Average Global Sales' 
+from dbo.videogames
+WHERE Genre = 'Action' AND Platform LIKE '%ps%'
+GROUP BY Platform
+
+-- Durschnittle Global Sales im Gerne Action nach Platform
+SELECT Platform, ROUND(AVG(Global_Sales),2) as 'Average Global Sales' 
+from dbo.videogames
+WHERE Genre = 'Action'
+GROUP BY Platform
+ORDER BY 'Average Global Sales' DESC 
+
+-- Durschnittliche Global Sales je nach Genre 
+
+SELECT Genre, COUNT(Name) as 'Games', ROUND(AVG(Global_Sales),2) as 'Average Global Sales'
+from dbo.videogames
+WHERE Genre IS NOT NULL 
+GROUP BY Genre 
+ORDER BY 'Average Global Sales' DESC
+
+/* Erkenntnis: Obwohl das Action Genre die meisten Spiele hat, ist es bei den durchschnittlichen Verkaufszahlen auf Platz 7 */ 
+
+-- Todo Verhältnis Anzahl spiele und Global Sales ... (?)
