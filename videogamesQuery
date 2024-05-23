@@ -34,11 +34,11 @@ where Publisher = 'Nintendo' AND Year_of_Release < 2000  AND Year_of_Release >= 
 /* Wo wurde Pokemon ausserhalb von Japan am meisten verkauft */ 
 
 SELECT Name, Platform,
-CASE
-	WHEN EU_Sales > NA_Sales AND EU_Sales > Other_Sales THEN 'Europa'
-	WHEN NA_Sales > EU_Sales AND NA_Sales > Other_Sales THEN 'North America'
-	ELSE 'Other'
-END AS 'Most Sold'
+	CASE
+		WHEN EU_Sales > NA_Sales AND EU_Sales > Other_Sales THEN 'Europa'
+		WHEN NA_Sales > EU_Sales AND NA_Sales > Other_Sales THEN 'North America'
+		ELSE 'Other'
+	END AS 'Most Sold'
 from dbo.videogames
 where Publisher = 'Nintendo' AND Year_of_Release < 2000  AND Year_of_Release >= 1990 AND Name LIKE '%pokemon%'
 
@@ -110,3 +110,20 @@ ORDER BY 'Average Global Sales' DESC
 /* Erkenntnis: Obwohl das Action Genre die meisten Spiele hat, ist es bei den durchschnittlichen Verkaufszahlen auf Platz 7 */ 
 
 -- Todo Verhältnis Anzahl spiele und Global Sales ... (?)
+------------------------------------------------------------------------------------
+/* Durschnittliche Global Sales je nach Genre
+
+Erkenntnis: In den 90er Jahren was Puzzle Gerne weitaus beliebert das jetzt. 
+
+*/ 
+SELECT Genre, COUNT(Name) as 'Games', ROUND(AVG(Global_Sales),2) as 'Average Global Sales'
+from dbo.videogames
+WHERE Genre IS NOT NULL AND Year_of_Release < 2000
+GROUP BY Genre 
+ORDER BY 'Average Global Sales' DESC
+
+
+
+SELECT *
+from dbo.videogames
+WHERE Publisher ='Nintendo'
